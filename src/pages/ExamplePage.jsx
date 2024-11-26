@@ -3,8 +3,11 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import Option from "../components/Option";
 import DashboardLayout from "../layouts/DashboardLayout";
+import Modal from "../components/Modal";
+import { useState } from "react";
 
 const ExamplePage = () => {
+    const [isOpen, setIsOpen] = useState(false);
     const people = [
         { id: 1, name: 'Durward Reynolds' },
         { id: 2, name: 'Kenton Towne' },
@@ -35,6 +38,20 @@ const ExamplePage = () => {
                 placeholder="Type here.."
             />
             <Option name="list" options={people} />
+            <Button
+                variant="secondary"
+                onClick={() => setIsOpen(true)}
+            >
+                Open
+            </Button>
+            <Modal title="Add User" description="Please add new user in the form below." open={isOpen} onClose={() => setIsOpen(false)}>
+                <Input
+                    label="Name"
+                    name="name"
+                    type="text"
+                    placeholder="Please type user name..."
+                />
+            </Modal>
         </DashboardLayout>
     )
 }
