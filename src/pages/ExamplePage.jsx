@@ -54,7 +54,7 @@ const ExamplePage = () => {
                 />
             </Modal>
             <div className="grid grid-cols-2 gap-2">
-                <Card title="Kelas Satu">
+                <Card title="Kelas Satu" onClick={() => console.log("card clicked")}>
                     <p className="text-base text-slate-400">Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm. Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.</p>
                 </Card>
                 <Card title="Kelas Dua">
