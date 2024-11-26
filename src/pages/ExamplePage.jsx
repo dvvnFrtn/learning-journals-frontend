@@ -5,6 +5,7 @@ import Option from "../components/Option";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Modal from "../components/Modal";
 import { useState } from "react";
+import Card from "../components/Card";
 
 const ExamplePage = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -52,6 +53,14 @@ const ExamplePage = () => {
                     placeholder="Please type user name..."
                 />
             </Modal>
+            <div className="grid grid-cols-2 gap-2">
+                <Card title="Kelas Satu">
+                    <p className="text-base text-slate-400">Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm. Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.</p>
+                </Card>
+                <Card title="Kelas Dua">
+                    <p className="text-base text-slate-400">Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.</p>
+                </Card>
+            </div>
         </DashboardLayout>
     )
 }
