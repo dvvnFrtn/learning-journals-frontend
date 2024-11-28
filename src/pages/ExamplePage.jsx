@@ -21,7 +21,7 @@ const ExamplePage = () => {
         <DashboardLayout>
             <div className="flex w-full gap-2 flex-col">
                 <div className="flex justify-between items-center">
-                    <h1 className="font-bold text-6xl text-slate-900">User</h1>
+                    <h1 className="font-bold text-6xl text-slate-900">Example</h1>
                     <Button
                         variant="primary"
                     >
