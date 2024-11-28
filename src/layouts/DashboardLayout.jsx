@@ -13,17 +13,17 @@ const DashboardLayout = ({ children }) => {
                 <header className="h-24 px-16 flex items-center justify-between">
                     <nav className="flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
                         <a
-                            href="/"
+                            href="/example"
                             className="text-gray-500 hover:text-blue-600 transition-colors"
                         >
                             Home
                         </a>
                         <span className="text-gray-400">/</span>
                         <a
-                            href="/category"
+                            href="/user"
                             className="text-gray-500 hover:text-blue-600 transition-colors"
                         >
-                            Category
+                            User
                         </a>
                         <span className="text-gray-400">/</span>
                         <span className="text-gray-800 font-semibold">Current Page</span>
