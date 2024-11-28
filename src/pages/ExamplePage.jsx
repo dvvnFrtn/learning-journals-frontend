@@ -6,6 +6,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import Modal from "../components/Modal";
 import { useState } from "react";
 import Card from "../components/Card";
+import Table from "../components/Table";
 
 const ExamplePage = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,21 @@ const ExamplePage = () => {
         { id: 3, name: 'Therese Wunsch' },
         { id: 4, name: 'Benedict Kessler' },
         { id: 5, name: 'Katelyn Rohan' },
+    ]
+
+    const colum = [
+        { id: 1, header: "Header 1" },
+        { id: 2, header: "Header 2" },
+        { id: 3, header: "Header 3" },
+        { id: 4, header: "Header 4" },
+    ]
+
+    const data = [
+        { id: 1, columns: [{ id: 1, value: "Value" }, { id: 2, value: "Value" }, { id: 3, value: "Value" }, { id: 4, value: "Value" }] },
+        { id: 2, columns: [{ id: 1, value: "Value" }, { id: 2, value: "Value" }, { id: 3, value: "Value" }, { id: 4, value: "Value" }] },
+        { id: 3, columns: [{ id: 1, value: "Value" }, { id: 2, value: "Value" }, { id: 3, value: "Value" }, { id: 4, value: "Value" }] },
+        { id: 4, columns: [{ id: 1, value: "Value" }, { id: 2, value: "Value" }, { id: 3, value: "Value" }, { id: 4, value: "Value" }] },
+        { id: 5, columns: [{ id: 1, value: "Value" }, { id: 2, value: "Value" }, { id: 3, value: "Value" }, { id: 4, value: "Value" }] },
     ]
 
     return (
@@ -61,6 +77,7 @@ const ExamplePage = () => {
                     <p className="text-base text-slate-400">Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.</p>
                 </Card>
             </div>
+            <Table columnDef={colum} data={data} />
         </DashboardLayout>
     )
 }
