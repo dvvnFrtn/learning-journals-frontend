@@ -1,23 +1,55 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import ExamplePage from './pages/ExamplePage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import UserPage from './pages/UserPage.jsx'
-import ClassPage from './pages/ClassPage.jsx'
-import ApprovalPage from './pages/ApprovalPage.jsx'
+import App from './App'
+import AuthProvider from 'react-auth-kit'
+import createStore from 'react-auth-kit/createStore'
+import { BrowserRouter } from 'react-router-dom'
+import createRefresh from 'react-auth-kit/createRefresh'
+import axiosInstance from './utils/axiosInstance'
+
+const refresh = createRefresh({
+    interval: 2,
+    refreshApiCallback: async (param) => {
+        try {
+            const response = await axiosInstance.post("/auth/refresh-token", { refreshToken: param.refreshToken }, {
+                headers: {
+                    'jwt': param.authToken
+                }
+            })
+            console.log("Refreshing")
+            return {
+                isSuccess: true,
+                newAuthToken: response.data.data.accessToken,
+                newRefreshToken: response.data.data.refreshToken,
+            }
+        } catch (error) {
+            console.error("Error Refreshing Token: ", error.response.data.message || error.message)
+            document.cookie = "_auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            document.cookie = "_auth_refresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            document.cookie = "_auth_state=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            return {
+                isSuccess: false
+            }
+        }
+    }
+})
+
+const store = createStore({
+    authName: "_auth",
+    authType: "cookie",
+    debug: false,
+    refresh: refresh,
+    cookieDomain: window.location.hostname,
+    cookieSecure: false,
+});
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/example" element={<ExamplePage />} />
-                <Route path="/user" element={<UserPage />} />
-                <Route path="/class" element={<ClassPage />} />
-                <Route path="/approval" element={<ApprovalPage />} />
-            </Routes>
-        </BrowserRouter>
+        <AuthProvider store={store}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </AuthProvider>
     </StrictMode>,
 )

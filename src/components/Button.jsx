@@ -13,7 +13,7 @@ const Button = ({ variant = "primary", children, ...props }) => {
     return (
         <HlButton
             className={clsx(
-                "inline-flex items-center justify-center gap-2 px-6 py-2 font-semibold shadow-sm rounded-full",
+                "inline-flex flex-nowrap text-nowrap items-center justify-center gap-2 px-6 py-2 font-semibold shadow-sm rounded-full",
                 "data-[hover]:shadow-none",
                 variant && variants[variant],
             )}

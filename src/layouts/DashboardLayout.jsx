@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
 import Sidebar from "../components/Sidebar";
+import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 
 const DashboardLayout = ({ children }) => {
+    const auth = useAuthUser();
+    console.log(auth);
+
     return (
         <div className="flex min-h-screen bg-gray-100">
             {/* Sidebar */}
@@ -28,6 +32,7 @@ const DashboardLayout = ({ children }) => {
                         <span className="text-gray-400">/</span>
                         <span className="text-gray-800 font-semibold">Current Page</span>
                     </nav>
+                    <div>Hello {auth ? auth.role : "Anonymous"}</div>
                 </header>
 
                 {/* Body */}
