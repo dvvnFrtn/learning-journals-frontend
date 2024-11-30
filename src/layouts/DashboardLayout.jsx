@@ -4,7 +4,6 @@ import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 
 const DashboardLayout = ({ children }) => {
     const auth = useAuthUser();
-    console.log(auth);
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -17,14 +16,14 @@ const DashboardLayout = ({ children }) => {
                 <header className="h-24 px-16 flex items-center justify-between">
                     <nav className="flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
                         <a
-                            href="/example"
+                            href="/examples"
                             className="text-gray-500 hover:text-blue-600 transition-colors"
                         >
                             Home
                         </a>
                         <span className="text-gray-400">/</span>
                         <a
-                            href="/user"
+                            href="/users"
                             className="text-gray-500 hover:text-blue-600 transition-colors"
                         >
                             User
