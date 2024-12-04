@@ -3,7 +3,6 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 
 const Modal = ({ children, title, description, open = false, onClose, ...props }) => {
-
     return (
         <>
             <Dialog
@@ -39,7 +38,7 @@ const Modal = ({ children, title, description, open = false, onClose, ...props }
             </Dialog>
         </>
     )
-}
+};
 
 Modal.propTypes = {
     title: PropTypes.string.isRequired,
@@ -47,6 +46,6 @@ Modal.propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired
-}
+};
 
 export default Modal;

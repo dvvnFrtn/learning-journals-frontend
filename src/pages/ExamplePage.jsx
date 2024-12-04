@@ -54,7 +54,6 @@ const ExamplePage = () => {
                 type="text"
                 placeholder="Type here.."
             />
-            <Option name="list" options={people} />
             <Button
                 variant="secondary"
                 onClick={() => setIsOpen(true)}
@@ -68,6 +67,7 @@ const ExamplePage = () => {
                     type="text"
                     placeholder="Please type user name..."
                 />
+                <Option name="list" options={people} />
             </Modal>
             <div className="grid grid-cols-2 gap-2">
                 <Card title="Kelas Satu" onClick={() => console.log("card clicked")}>
@@ -77,7 +77,7 @@ const ExamplePage = () => {
                     <p className="text-base text-slate-400">Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.</p>
                 </Card>
             </div>
-            <Table columnDef={colum} data={data} />
+            {/* <Table columns={colum} data={data} /> */}
         </DashboardLayout>
     )
 }
