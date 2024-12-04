@@ -20,18 +20,23 @@ const UserPage = () => {
     const [usersData, setUsersData] = useState([]);
     const [userData, setUserData] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [hasMoreData, setHasMoreData] = useState(true);
     const [mode, setMode] = useState("create");
     const authHeader = useAuthHeader();
+    const offset = pageIndex * pageSize;
 
-    const getUsers = useCallback(async () => {
+    const getUsers = useCallback(async (limit, offset) => {
         try {
-            const response = await axiosInstance.get("/users?limit=20", {
+            const response = await axiosInstance.get(`/users?limit=${limit}&offset=${offset}`, {
                 headers: {
                     jwt: getToken(authHeader)
                 }
             });
             const users = response.data.data;
             setUsersData(users);
+            setHasMoreData(response.data.data.length === pageSize);
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message;
             console.error(`${MESSAGES.users.fetchError}: `, errorMessage);
@@ -41,11 +46,11 @@ const UserPage = () => {
                 toast.error(MESSAGES.submitError);
             }
         }
-    }, [authHeader]);
+    }, [authHeader, pageSize]);
 
     useEffect(() => {
-        getUsers();
-    }, [getUsers]);
+        getUsers(pageSize, offset);
+    }, [getUsers, pageSize, pageIndex, offset]);
 
     const columns = useMemo(() => [
         columnHelper.display({
@@ -152,6 +157,11 @@ const UserPage = () => {
                 <Table
                     columnsDef={columns}
                     data={usersData}
+                    pageIndex={pageIndex}
+                    pageSize={pageSize}
+                    hasMoreData={hasMoreData}
+                    setPageIndex={(value) => setPageIndex(value)}
+                    setPageSize={(value) => setPageSize(value)}
                 />
                 <Modal
                     title={title}
@@ -163,7 +173,7 @@ const UserPage = () => {
                         <CreateUserForm
                             afterSubmit={() => {
                                 setIsOpen(false);
-                                getUsers();
+                                getUsers(pageSize, offset);
                             }}
                             onCancel={() => {
                                 setIsOpen(false);
@@ -176,7 +186,7 @@ const UserPage = () => {
                             user={userData}
                             afterSubmit={() => {
                                 setIsOpen(false);
-                                getUsers();
+                                getUsers(pageSize, offset);
                             }}
                             onCancel={() => {
                                 setIsOpen(false);
@@ -189,7 +199,7 @@ const UserPage = () => {
                             user={userData}
                             afterSubmit={() => {
                                 setIsOpen(false);
-                                getUsers();
+                                getUsers(pageSize, offset);
                             }}
                             onCancel={() => {
                                 setIsOpen(false);

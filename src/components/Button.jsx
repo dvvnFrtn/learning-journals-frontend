@@ -15,6 +15,7 @@ const Button = ({ variant = "primary", children, ...props }) => {
             className={clsx(
                 "inline-flex flex-nowrap text-nowrap items-center justify-center gap-2 px-6 py-2 font-medium shadow-sm rounded-full",
                 "data-[hover]:shadow-none",
+                "data-[disabled]:bg-slate-100 data-[disabled]:text-slate-300",
                 variant && variants[variant],
             )}
             {...props}
