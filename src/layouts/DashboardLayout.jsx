@@ -6,7 +6,7 @@ const DashboardLayout = ({ children }) => {
     const auth = useAuthUser();
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-slate-100">
             {/* Sidebar */}
             <Sidebar />
 
