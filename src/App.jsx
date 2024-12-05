@@ -8,6 +8,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import JournalPage from "./pages/JournalPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ClassDetailPage from "./pages/ClassDetailPage";
 
 const App = () => {
     return (
@@ -27,6 +28,11 @@ const App = () => {
                 <Route path="/classes" element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                         <ClassPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/classes/:id" element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                        <ClassDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/approvals" element={

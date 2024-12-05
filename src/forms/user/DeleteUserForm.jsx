@@ -1,9 +1,9 @@
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import Button from "../components/Button";
-import axiosInstance from "../utils/axiosInstance";
-import { getToken } from "../utils/common";
+import Button from "../../components/Button";
+import axiosInstance from "../../utils/axiosInstance";
+import { getToken } from "../../utils/common";
 import { toast } from "react-toastify";
-import { MESSAGES } from "../constants/string.const";
+import { MESSAGES } from "../../constants/string.const";
 import PropTypes from "prop-types";
 
 const DeleteUserForm = ({ user, afterSubmit, onCancel }) => {

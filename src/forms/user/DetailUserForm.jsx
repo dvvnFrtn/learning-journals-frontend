@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import Input from "../components/Input";
-import { PLACEHOLDERS } from "../constants/string.const";
-import Option from "../components/Option";
-import Button from "../components/Button";
+import Input from "../../components/Input";
+import { PLACEHOLDERS } from "../../constants/string.const";
+import Option from "../../components/Option";
+import Button from "../../components/Button";
 
 const DetailUserForm = ({ user, afterSubmit }) => {
     const handleSubmit = (e) => {

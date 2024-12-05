@@ -1,56 +1,83 @@
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
-import Button from "../components/Button";
-import DashboardLayout from "../layouts/DashboardLayout";
-import axiosInstance from "../utils/axiosInstance";
-import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { toast } from "react-toastify";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { getModalContent, getToken } from "../utils/common";
+import { MESSAGES, MODAL, TABLE_HEADER } from "../constants/string.const";
+import { toast } from "react-toastify";
+import DashboardLayout from "../layouts/DashboardLayout";
+import TableHeader from "../components/TableHeader";
 import Table from "../components/Table";
 import { createColumnHelper } from "@tanstack/react-table";
-import { getModalContent, getToken } from "../utils/common";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
+import Button from "../components/Button";
 import Modal from "../components/Modal";
-import { MESSAGES, MODAL, TABLE_HEADER } from "../constants/string.const";
-import CreateUserForm from "../forms/user/CreateUserForm";
-import UpdateUserForm from "../forms/user/UpdateUserForm";
-import DeleteUserForm from "../forms/user/DeleteUserForm";
-import TableHeader from "../components/TableHeader";
-import DetailUserForm from "../forms/user/DetailUserForm";
+import DetailSubjectForm from "../forms/subject/DetailSubjectForm";
+import UpdateSubjectForm from "../forms/subject/UpdateSubjectForm";
+import DeleteSubjectForm from "../forms/subject/DeleteSubjectForm";
+import CreateSubjectForm from "../forms/subject/CreateSubjectForm";
 
-const UserPage = () => {
-    const [usersData, setUsersData] = useState([]);
-    const [userData, setUserData] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
+const ClassDetailPage = () => {
+    const { id } = useParams();
+    const [subjectsData, setSubjectsData] = useState([]);
+    const [subjectData, setSubjectData] = useState(null);
+    const [classData, setClassData] = useState({});
     const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(8);
+    const [pageSize, setPageSize] = useState(5);
     const [hasMoreData, setHasMoreData] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState("create");
+    const offset = pageSize * pageIndex;
     const authHeader = useAuthHeader();
-    const offset = pageIndex * pageSize;
 
-    const getUsers = useCallback(async (limit, offset) => {
+    const getSubjects = useCallback(async (limit, offset) => {
         try {
-            const response = await axiosInstance.get(`/users?limit=${limit}&offset=${offset}`, {
+            const response = await axiosInstance.get(`/class/${id}/subjects/?limit=${limit}&offset=${offset}`, {
                 headers: {
                     jwt: getToken(authHeader)
                 }
             });
-            const users = response.data.data;
-            setUsersData(users);
+            const subjects = response.data.data;
+            setSubjectsData(subjects);
             setHasMoreData(response.data.data.length === pageSize);
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message;
-            console.error(`${MESSAGES.users.fetchError}: `, errorMessage);
+            console.error(`${MESSAGES.subjects.fetchError}: `, errorMessage);
             if (error.status !== 500) {
                 toast.error(error.response?.data?.message);
             } else {
                 toast.error(MESSAGES.submitError);
             }
         }
-    }, [authHeader, pageSize]);
+    }, [authHeader, pageSize, id]);
+
+    const getClass = useCallback(async () => {
+        try {
+            const response = await axiosInstance.get(`/class/${id}`, {
+                headers: {
+                    jwt: getToken(authHeader)
+                }
+            });
+            const currentClass = response.data.data;
+            setClassData(currentClass);
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || error.message;
+            console.error(`${MESSAGES.classes.fetchError}: `, errorMessage);
+            if (error.status !== 500) {
+                toast.error(error.response?.data?.message);
+            } else {
+                toast.error(MESSAGES.submitError);
+            }
+        }
+    }, [authHeader, id]);
 
     useEffect(() => {
-        getUsers(pageSize, offset);
-    }, [getUsers, pageSize, pageIndex, offset]);
+        getClass();
+    }, [getClass]);
+
+    useEffect(() => {
+        getSubjects(pageSize, offset);
+    }, [getSubjects, pageSize, offset]);
 
     const columns = useMemo(() => [
         columnHelper.display({
@@ -61,7 +88,7 @@ const UserPage = () => {
                     onClick={(e) => {
                         e.stopPropagation();
                         setMode("detail");
-                        setUserData(prop.row.original);
+                        setSubjectData(prop.row.original);
                         setIsOpen(true);
                     }}
                     className="flex justify-center hover:text-blue-400 hover:underline">
@@ -70,37 +97,20 @@ const UserPage = () => {
             ),
             size: 80
         }),
-        columnHelper.accessor("email", {
-            cell: (prop) => prop.getValue(),
-        }),
-        columnHelper.accessor("fullName", {
-            cell: (prop) => prop.getValue(),
-        }),
-        columnHelper.accessor("role.name", {
-            id: "role",
+        columnHelper.accessor("name", {
             header: () => (
                 <span className="flex justify-center">
-                    Role
+                    Name
                 </span>
             ),
             cell: (prop) => (
-                <span className="flex justify-center uppercase">
+                <span className="flex justify-center">
                     {prop.getValue()}
                 </span>
             ),
         }),
-        columnHelper.accessor("class.name", {
-            id: "class",
-            header: () => (
-                <span className="flex justify-center">
-                    Class
-                </span>
-            ),
-            cell: (prop) => (
-                <span className="flex justify-center">
-                    {prop.getValue() || "N/A"}
-                </span>
-            ),
+        columnHelper.accessor("description", {
+            cell: (prop) => prop.getValue(),
         }),
         columnHelper.display({
             id: "actions",
@@ -116,7 +126,7 @@ const UserPage = () => {
                         onClick={(e) => {
                             e.stopPropagation();
                             setMode("update");
-                            setUserData(prop.row.original);
+                            setSubjectData(prop.row.original);
                             setIsOpen(true);
                         }}
                     >
@@ -127,7 +137,7 @@ const UserPage = () => {
                         onClick={(e) => {
                             e.stopPropagation();
                             setMode("delete");
-                            setUserData(prop.row.original);
+                            setSubjectData(prop.row.original);
                             setIsOpen(true);
                         }}
                     >
@@ -139,24 +149,24 @@ const UserPage = () => {
         }),
     ], []);
 
-    const { title, description } = getModalContent(mode, MODAL.user);
+    const { title, description } = getModalContent(mode, MODAL.subject);
 
     return (
         <DashboardLayout>
             <div className="flex flex-col gap-2 w-full">
                 <TableHeader
-                    title={TABLE_HEADER.users.title}
-                    description={TABLE_HEADER.users.description}
-                    buttonText={TABLE_HEADER.users.buttonText}
+                    title={TABLE_HEADER.subjects.title}
+                    description={TABLE_HEADER.subjects.description}
+                    buttonText={TABLE_HEADER.subjects.buttonText}
                     action={() => {
                         setMode("create");
-                        setUserData(null);
+                        setSubjectData(null);
                         setIsOpen(true);
                     }}
                 />
                 <Table
                     columnsDef={columns}
-                    data={usersData}
+                    data={subjectsData}
                     pageIndex={pageIndex}
                     pageSize={pageSize}
                     hasMoreData={hasMoreData}
@@ -170,46 +180,49 @@ const UserPage = () => {
                     onClose={() => setIsOpen(false)}
                 >
                     {mode === "create" && (
-                        <CreateUserForm
+                        <CreateSubjectForm
+                            currentClass={classData}
                             afterSubmit={() => {
                                 setIsOpen(false);
-                                getUsers(pageSize, offset);
+                                getSubjects(pageSize, offset);
                             }}
                             onCancel={() => {
                                 setIsOpen(false);
-                                setUserData(null);
+                                setSubjectData(null);
                             }}
                         />
                     )}
                     {mode === "update" && (
-                        <UpdateUserForm
-                            user={userData}
+                        <UpdateSubjectForm
+                            subject={subjectData}
+                            currentClass={classData}
                             afterSubmit={() => {
                                 setIsOpen(false);
-                                getUsers(pageSize, offset);
+                                getSubjects(pageSize, offset);
                             }}
                             onCancel={() => {
                                 setIsOpen(false);
-                                setUserData(null);
+                                setSubjectData(null);
                             }}
                         />
                     )}
                     {mode === "delete" && (
-                        <DeleteUserForm
-                            user={userData}
+                        <DeleteSubjectForm
+                            subject={subjectData}
                             afterSubmit={() => {
                                 setIsOpen(false);
-                                getUsers(pageSize, offset);
+                                getSubjects(pageSize, offset);
                             }}
                             onCancel={() => {
                                 setIsOpen(false);
-                                setUserData(null);
+                                setSubjectData(null);
                             }}
                         />
                     )}
                     {mode === "detail" && (
-                        <DetailUserForm
-                            user={userData}
+                        <DetailSubjectForm
+                            subject={subjectData}
+                            currentClass={classData}
                             afterSubmit={() => {
                                 setIsOpen(false);
                             }}
@@ -219,8 +232,8 @@ const UserPage = () => {
             </div>
         </DashboardLayout>
     )
-};
+}
 
 const columnHelper = createColumnHelper();
 
-export default UserPage;
+export default ClassDetailPage;

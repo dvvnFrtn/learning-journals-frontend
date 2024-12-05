@@ -1,18 +1,18 @@
-import { Controller, useForm } from "react-hook-form";
-import Button from "../components/Button";
-import Input from "../components/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import axiosInstance from "../utils/axiosInstance";
-import { toast } from "react-toastify";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { getToken } from "../utils/common";
-import Option from "../components/Option";
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { MESSAGES, PLACEHOLDERS } from "../constants/string.const";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
+import Input from "../../components/Input";
+import { MESSAGES, PLACEHOLDERS } from "../../constants/string.const";
+import Option from "../../components/Option";
+import Button from "../../components/Button";
+import { getToken } from "../../utils/common";
+import { useEffect, useState } from "react";
+import axiosInstance from "../../utils/axiosInstance";
+import { toast } from "react-toastify";
 
-const CreateUserForm = ({ afterSubmit, onCancel }) => {
+const UpdateUserForm = ({ user, afterSubmit, onCancel }) => {
     const [roles, setRoles] = useState([]);
     const [classes, setClasses] = useState([]);
     const {
@@ -27,18 +27,18 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
     });
     const authHeader = useAuthHeader();
 
-    const addUser = async (formData) => {
+    const updateUser = async (formData) => {
         try {
-            await axiosInstance.post("/users", formData, {
+            await axiosInstance.put(`/users/${user?.id}`, formData, {
                 headers: {
                     jwt: getToken(authHeader)
                 }
             });
-            toast.success(MESSAGES.users.addSuccess);
+            toast.success(MESSAGES.users.updateSuccess);
             afterSubmit();
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message;
-            console.log(`${MESSAGES.users.addError}: `, errorMessage);
+            console.log(`${MESSAGES.users.updateError}: `, errorMessage);
             if (error.status !== 500) {
                 toast.error(error.response?.data?.message);
             } else {
@@ -70,7 +70,7 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
                     }
                 }
             }
-        }
+        };
         const getClass = async () => {
             try {
                 const response = await axiosInstance.get("/class", {
@@ -91,24 +91,24 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
                     }
                 }
             }
-        }
+        };
 
         getRoles();
         getClass();
 
         return () => {
             controller.abort();
-        }
+        };
     }, [authHeader]);
 
     return (
         <div>
             {
-                roles.length !== 0 &&
+                user &&
                 <form
                     className="flex flex-col gap-2"
                     onSubmit={handleSubmit((formData) => {
-                        addUser(transformFormData(formData));
+                        updateUser(transformFormData(formData));
                     })}
                 >
                     <Input
@@ -116,6 +116,7 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
                         name="email"
                         type="email"
                         label="Email"
+                        defaultValue={user?.email}
                         placeholder={PLACEHOLDERS.userForm.email}
                         invalid={!!errors.email}
                     />
@@ -123,21 +124,11 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
                         {errors.email?.message}
                     </p>
                     <Input
-                        {...register("password")}
-                        name="password"
-                        type="password"
-                        label="Password"
-                        placeholder={PLACEHOLDERS.userForm.password}
-                        invalid={!!errors.password}
-                    />
-                    <p className="text-sm text-red-400">
-                        {errors.password?.message}
-                    </p>
-                    <Input
                         {...register("fullName")}
                         name="fullName"
                         type="text"
                         label="Fullname"
+                        defaultValue={user?.fullName}
                         placeholder={PLACEHOLDERS.userForm.fullName}
                         invalid={!!errors.fullName}
                     />
@@ -149,7 +140,7 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
                             <Controller
                                 name="roleId"
                                 control={control}
-                                defaultValue={null}
+                                defaultValue={user?.role}
                                 render={({ field: { value, onChange } }) => (
                                     <Option
                                         name="roleId"
@@ -169,7 +160,7 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
                             <Controller
                                 name="classId"
                                 control={control}
-                                defaultValue={null}
+                                defaultValue={user?.class}
                                 render={({ field: { value, onChange } }) => (
                                     <Option
                                         name="classId"
@@ -199,14 +190,14 @@ const CreateUserForm = ({ afterSubmit, onCancel }) => {
     )
 };
 
-CreateUserForm.propTypes = {
+UpdateUserForm.propTypes = {
+    user: PropTypes.object,
     afterSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
 };
 
 const userFormSchema = yup.object({
     email: yup.string().email().required(),
-    password: yup.string().min(6).required(),
     fullName: yup.string().required(),
     roleId: yup.object().required(),
 }).required();
@@ -215,10 +206,9 @@ const transformFormData = (data) => {
     return {
         email: data.email,
         fullName: data.fullName,
-        password: data.password,
         roleId: data.roleId.id,
         classId: data.classId?.id,
     }
 };
 
-export default CreateUserForm;
+export default UpdateUserForm;
