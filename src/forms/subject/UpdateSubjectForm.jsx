@@ -10,6 +10,7 @@ import Button from "../../components/Button";
 import { getToken } from "../../utils/common";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
+import InputTextArea from "../../components/InputTextArea";
 
 const UpdateSubjectForm = ({ subject, afterSubmit, onCancel, currentClass }) => {
     const {
@@ -65,7 +66,7 @@ const UpdateSubjectForm = ({ subject, afterSubmit, onCancel, currentClass }) => 
                     <p className="text-sm text-red-400">
                         {errors.name?.message}
                     </p>
-                    <Input
+                    <InputTextArea
                         {...register("description")}
                         name="description"
                         type="text"

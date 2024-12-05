@@ -21,6 +21,15 @@ export const MESSAGES = {
         deleteError: "Gagal menghapus data subject",
         deleteSuccess: "Subject berhasil dihapus",
     },
+    students: {
+        fetchError: "Gagal mengambil data students",
+        addError: "Gagal menambahkan data students",
+        addSuccess: "Student berhasil ditambahkan",
+        updateError: "Gagal memperbarui data subject",
+        updateSuccess: "Student berhasil diperbarui",
+        deleteError: "Gagal menghapus data students",
+        deleteSuccess: "Student berhasil dihapus",
+    },
     users: {
         fetchError: "Gagal mengambil data users",
         addError: "Gagal menambahkan data user",
@@ -48,6 +57,11 @@ export const PLACEHOLDERS = {
     subjectForm: {
         name: "e.g Subject 1",
         description: "Description subject here..."
+    },
+    studentForm: {
+        name: "e.g John Doe",
+        gender: "Select gender",
+        selectClass: "Select class",
     }
 };
 
@@ -105,6 +119,24 @@ export const MODAL = {
             title: "Detail Subject",
             description: "Here is the comprehensive information about the selected subject. Review the details carefully."
         }
+    },
+    student: {
+        create: {
+            title: "Create Student",
+            description: "Fill in the details below to add a new student. Make sure all the information is accurate before submission."
+        },
+        update: {
+            title: "Update Student",
+            description: "Edit the student details as needed. Ensure the updated information is accurate before saving."
+        },
+        delete: {
+            title: "Delete Student",
+            description: "You are about to delete this student. This action cannot be undone. Are you sure you want to proceed?"
+        },
+        detail: {
+            title: "Detail Student",
+            description: "Here is the comprehensive information about the selected student. Review the details carefully."
+        }
     }
 };
 
@@ -123,5 +155,10 @@ export const TABLE_HEADER = {
         title: "Subjects",
         description: "This is a list of subjects available in the system. You can add, edit, or delete subjects as required.",
         buttonText: "Add Subject",
+    },
+    students: {
+        title: "Students",
+        description: "This is a list of students available in the system. You can add, edit, or delete students as required.",
+        buttonText: "Add Student",
     }
 }
