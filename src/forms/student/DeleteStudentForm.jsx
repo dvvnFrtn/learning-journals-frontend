@@ -1,26 +1,26 @@
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import Button from "../components/Button";
-import axiosInstance from "../utils/axiosInstance";
-import { getToken } from "../utils/common";
+import Button from "../../components/Button";
+import axiosInstance from "../../utils/axiosInstance";
+import { getToken } from "../../utils/common";
 import { toast } from "react-toastify";
-import { MESSAGES } from "../constants/string.const";
+import { MESSAGES } from "../../constants/string.const";
 import PropTypes from "prop-types";
 
-const DeleteUserForm = ({ user, afterSubmit, onCancel }) => {
+const DeleteStudentForm = ({ student, afterSubmit, onCancel }) => {
     const authHeader = useAuthHeader();
 
-    const deleteUser = async () => {
+    const deleteStudent = async () => {
         try {
-            await axiosInstance.delete(`/users/${user?.id}`, {
+            await axiosInstance.delete(`/students/${student?.id}`, {
                 headers: {
                     jwt: getToken(authHeader),
                 },
             });
-            toast.success(MESSAGES.users.deleteSuccess);
+            toast.success(MESSAGES.students.deleteSuccess);
             afterSubmit();
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message;
-            console.error(`${MESSAGES.users.deleteError}: `, errorMessage);
+            console.error(`${MESSAGES.students.deleteError}: `, errorMessage);
             if (error.status !== 500) {
                 toast.error(error.response?.data?.message);
             } else {
@@ -34,7 +34,7 @@ const DeleteUserForm = ({ user, afterSubmit, onCancel }) => {
             <Button
                 variant="primary"
                 onClick={() => {
-                    deleteUser();
+                    deleteStudent();
                 }}
             >
                 Hapus
@@ -49,10 +49,10 @@ const DeleteUserForm = ({ user, afterSubmit, onCancel }) => {
     )
 };
 
-DeleteUserForm.propTypes = {
-    user: PropTypes.object,
+DeleteStudentForm.propTypes = {
+    student: PropTypes.object,
     afterSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
 };
 
-export default DeleteUserForm;
+export default DeleteStudentForm;

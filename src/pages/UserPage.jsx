@@ -10,18 +10,18 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { getModalContent, getToken } from "../utils/common";
 import Modal from "../components/Modal";
 import { MESSAGES, MODAL, TABLE_HEADER } from "../constants/string.const";
-import CreateUserForm from "../forms/CreateUserForm";
-import UpdateUserForm from "../forms/UpdateUserForm";
-import DeleteUserForm from "../forms/DeleteUserForm";
+import CreateUserForm from "../forms/user/CreateUserForm";
+import UpdateUserForm from "../forms/user/UpdateUserForm";
+import DeleteUserForm from "../forms/user/DeleteUserForm";
 import TableHeader from "../components/TableHeader";
-import DetailUserForm from "../forms/DetailUserForm";
+import DetailUserForm from "../forms/user/DetailUserForm";
 
 const UserPage = () => {
     const [usersData, setUsersData] = useState([]);
     const [userData, setUserData] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [mode, setMode] = useState("create");
     const authHeader = useAuthHeader();
@@ -150,7 +150,7 @@ const UserPage = () => {
                     buttonText={TABLE_HEADER.users.buttonText}
                     action={() => {
                         setMode("create");
-                        setUserData("null");
+                        setUserData(null);
                         setIsOpen(true);
                     }}
                 />

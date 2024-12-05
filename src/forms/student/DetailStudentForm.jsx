@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import Input from "../components/Input";
-import { PLACEHOLDERS } from "../constants/string.const";
-import Option from "../components/Option";
-import Button from "../components/Button";
+import Input from "../../components/Input";
+import { PLACEHOLDERS } from "../../constants/string.const";
+import Option from "../../components/Option";
+import Button from "../../components/Button";
 
-const DetailUserForm = ({ user, afterSubmit }) => {
+const DetailStudentForm = ({ student, afterSubmit, currentClass }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         afterSubmit();
@@ -13,34 +13,26 @@ const DetailUserForm = ({ user, afterSubmit }) => {
     return (
         <div>
             {
-                user &&
+                student &&
                 <form
                     className="flex flex-col gap-2"
                     onSubmit={handleSubmit}
                 >
                     <Input
                         disabled
-                        name="email"
-                        type="email"
-                        label="Email"
-                        defaultValue={user?.email}
-                        placeholder={PLACEHOLDERS.userForm.email}
-                    />
-                    <Input
-                        disabled
-                        name="fullName"
-                        type="text"
-                        label="Fullname"
-                        defaultValue={user?.fullName}
-                        placeholder={PLACEHOLDERS.userForm.fullName}
+                        name="name"
+                        type="name"
+                        label="Name"
+                        defaultValue={student?.name}
+                        placeholder={PLACEHOLDERS.studentForm.name}
                     />
                     <div className="w-full flex gap-4">
                         <div className="w-full">
                             <Option
                                 disabled
-                                name="roleId"
-                                value={user?.role}
-                                placeholder={PLACEHOLDERS.userForm.selectRole}
+                                name="gender"
+                                value={null}
+                                placeholder={student?.gender}
                                 options={[]}
                             />
                         </div>
@@ -48,9 +40,9 @@ const DetailUserForm = ({ user, afterSubmit }) => {
                             <Option
                                 disabled
                                 name="classId"
-                                value={user?.class}
+                                value={currentClass}
+                                placeholder={"Select class"}
                                 options={[]}
-                                placeholder={PLACEHOLDERS.userForm.selectClass}
                             />
                         </div>
                     </div>
@@ -68,9 +60,10 @@ const DetailUserForm = ({ user, afterSubmit }) => {
     )
 };
 
-DetailUserForm.propTypes = {
-    user: PropTypes.object,
+DetailStudentForm.propTypes = {
+    student: PropTypes.object,
     afterSubmit: PropTypes.func.isRequired,
+    currentClass: PropTypes.any,
 };
 
-export default DetailUserForm;
+export default DetailStudentForm;
