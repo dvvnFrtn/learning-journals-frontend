@@ -5,7 +5,7 @@ import Button from "./Button";
 
 const fallbackData = [];
 
-const Table = React.memo(({ columnsDef, data, pageIndex, pageSize, hasMoreData, setPageIndex, setPageSize }) => {
+const Table = React.memo(({ enablePagination = true, columnsDef, data, pageIndex, pageSize, hasMoreData, setPageIndex, setPageSize }) => {
     const table = useReactTable({
         data: data ?? fallbackData,
         columns: columnsDef,
@@ -70,25 +70,27 @@ const Table = React.memo(({ columnsDef, data, pageIndex, pageSize, hasMoreData, 
                         ))}
                     </tbody>
                 </table>
-                <div className="flex justify-between items-center bg-white px-12 py-6 border-t">
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            setPageIndex((old) => Math.max(old - 1, 0));
-                        }}
-                        disabled={pageIndex === 0}>
-                        Previous
-                    </Button>
-                    <span className="text-slate-900">Page {table.getState().pagination.pageIndex + 1}</span>
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            setPageIndex((old) => old + 1);
-                        }}
-                        disabled={!hasMoreData}>
-                        Next
-                    </Button>
-                </div>
+                {enablePagination && (
+                    <div className="flex justify-between items-center bg-white px-12 py-6 border-t">
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setPageIndex((old) => Math.max(old - 1, 0));
+                            }}
+                            disabled={pageIndex === 0}>
+                            Previous
+                        </Button>
+                        <span className="text-slate-900">Page {table.getState().pagination.pageIndex + 1}</span>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setPageIndex((old) => old + 1);
+                            }}
+                            disabled={!hasMoreData}>
+                            Next
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     )
@@ -103,7 +105,8 @@ Table.propTypes = {
     pageIndex: PropTypes.number.isRequired,
     hasMoreData: PropTypes.bool.isRequired,
     setPageIndex: PropTypes.func.isRequired,
-    setPageSize: PropTypes.func.isRequired
+    setPageSize: PropTypes.func.isRequired,
+    enablePagination: PropTypes.bool
 };
 
 export default Table;

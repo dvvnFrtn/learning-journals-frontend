@@ -15,6 +15,7 @@ import UpdateUserForm from "../forms/user/UpdateUserForm";
 import DeleteUserForm from "../forms/user/DeleteUserForm";
 import TableHeader from "../components/TableHeader";
 import DetailUserForm from "../forms/user/DetailUserForm";
+import clsx from "clsx";
 
 const UserPage = () => {
     const [usersData, setUsersData] = useState([]);
@@ -71,7 +72,11 @@ const UserPage = () => {
             size: 80
         }),
         columnHelper.accessor("email", {
-            cell: (prop) => prop.getValue(),
+            cell: (prop) => (
+                <span className="text-blue-400">
+                    {prop.getValue()}
+                </span>
+            )
         }),
         columnHelper.accessor("fullName", {
             cell: (prop) => prop.getValue(),
@@ -85,7 +90,12 @@ const UserPage = () => {
             ),
             cell: (prop) => (
                 <span className="flex justify-center uppercase">
-                    {prop.getValue()}
+                    <div className={clsx(
+                        "py-1 px-4 font-semibold  rounded-full w-max",
+                        prop.row.original.role.name === "admin" ? "text-red-400 bg-red-100" : "text-blue-400 bg-blue-100",
+                    )}>
+                        {prop.getValue()}
+                    </div>
                 </span>
             ),
         }),

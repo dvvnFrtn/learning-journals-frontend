@@ -1,61 +1,57 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import axiosInstance from "../utils/axiosInstance";
-import { getModalContent, getToken } from "../utils/common";
-import { MESSAGES, MODAL, TABLE_HEADER } from "../constants/string.const";
-import { toast } from "react-toastify";
-import TableHeader from "../components/TableHeader";
-import Table from "../components/Table";
-import Modal from "../components/Modal";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
-import Button from "../components/Button";
-import { createColumnHelper } from "@tanstack/react-table";
 import PropTypes from "prop-types";
-import CreateStudentForm from "../forms/student/CreateStudentForm";
-import DeleteStudentForm from "../forms/student/DeleteStudentForm";
-import DetailStudentForm from "../forms/student/DetailStudentForm";
-import UpdateStudentForm from "../forms/student/UpdateStudentForm";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import axiosInstance from "../../utils/axiosInstance";
+import { getModalContent, getToken } from "../../utils/common";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { MESSAGES, MODAL, TABLE_HEADER } from "../../constants/string.const";
+import { toast } from "react-toastify";
+import { createColumnHelper } from "@tanstack/react-table";
+import Button from "../../components/Button";
+import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
+import Modal from "../../components/Modal";
+import CreateAbsentForm from "../../forms/absent/CreateAbsentForm";
+import Table from "../../components/Table";
+import UpdateAbsentForm from "../../forms/absent/UpdateAbsentForm";
+import DetailAbsentForm from "../../forms/absent/DetailAbsentForm";
+import DeleteAbsentForm from "../../forms/absent/DeleteAbsentForm";
+import clsx from "clsx";
 
-const StudentPage = ({ classData }) => {
-    const [studentsData, setStudentsData] = useState([]);
-    const [studentData, setStudentData] = useState(null);
-    const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
-    const [hasMoreData, setHasMoreData] = useState(true);
+const StudentAbsentPage = ({ journal }) => {
+    const [absents, setAbsents] = useState([]);
+    const [absent, setAbsent] = useState(null);
+    const authHeader = useAuthHeader();
     const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState("create");
-    const offset = pageSize * pageIndex;
-    const authHeader = useAuthHeader();
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [hasMoreData, setHasMoreData] = useState(true);
 
-    const getStudents = useCallback(async (limit, offset) => {
+    const getAbsents = useCallback(async () => {
         try {
-            const response = await axiosInstance.get(`/class/${classData?.id}/students/?limit=${limit}&offset=${offset}`, {
+            const response = await axiosInstance.get(`/learning-journal/${journal?.id}/student-absent`, {
                 headers: {
                     jwt: getToken(authHeader)
                 }
             });
-            const students = response.data.data;
-            setStudentsData(students);
+            const abs = response.data.data;
+            setAbsents(abs);
             setHasMoreData(response.data.data.length === pageSize);
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message;
-            console.error(`${MESSAGES.students.fetchError}: `, errorMessage);
+            console.error(`${MESSAGES.studentAbsents.fetchError}: `, errorMessage);
             if (error.status !== 500) {
                 toast.error(error.response?.data?.message);
             } else {
                 toast.error(MESSAGES.submitError);
             }
         }
-    }, [authHeader, pageSize, classData?.id]);
+    }, [authHeader, journal, pageSize]);
 
     useEffect(() => {
-        if (!classData?.id) {
-            setStudentsData([]);
-            setHasMoreData(false);
-            return;
-        }
-        getStudents(pageSize, offset);
-    }, [getStudents, pageSize, offset, classData]);
+        getAbsents();
+    }, [getAbsents]);
+
+    const { title, description } = getModalContent(mode, MODAL.absent);
 
     const columns = useMemo(() => [
         columnHelper.display({
@@ -66,7 +62,7 @@ const StudentPage = ({ classData }) => {
                     onClick={(e) => {
                         e.stopPropagation();
                         setMode("detail");
-                        setStudentData(prop.row.original);
+                        setAbsent(prop.row.original);
                         setIsOpen(true);
                     }}
                     className="flex justify-center hover:text-blue-400 hover:underline">
@@ -75,7 +71,7 @@ const StudentPage = ({ classData }) => {
             ),
             size: 80
         }),
-        columnHelper.accessor("name", {
+        columnHelper.accessor("student.name", {
             header: () => (
                 <span className="flex justify-start">
                     Name
@@ -87,14 +83,44 @@ const StudentPage = ({ classData }) => {
                 </span>
             ),
         }),
-        columnHelper.accessor("gender", {
+        columnHelper.accessor("student.gender", {
             header: () => (
                 <span className="flex justify-center">
                     Gender
                 </span>
             ),
             cell: (prop) => (
+                <span className="flex justify-center uppercase font-semibold">
+                    <div className={clsx(
+                        "px-4 py-1 rounded-full w-max",
+                        prop.row.original.student.gender === "male" && "bg-blue-100 text-blue-400",
+                        prop.row.original.student.gender === "female" && "bg-pink-100 text-pink-400",
+                    )}>
+                        {prop.getValue()}
+                    </div>
+                </span>
+            ),
+        }),
+        columnHelper.accessor("student.class", {
+            header: () => (
+                <span className="flex justify-center">
+                    Class
+                </span>
+            ),
+            cell: (prop) => (
                 <span className="flex justify-center uppercase">
+                    {prop.getValue()}
+                </span>
+            ),
+        }),
+        columnHelper.accessor("description", {
+            header: () => (
+                <span className="flex justify-start">
+                    Description
+                </span>
+            ),
+            cell: (prop) => (
+                <span className="flex justify-start">
                     {prop.getValue()}
                 </span>
             ),
@@ -113,7 +139,7 @@ const StudentPage = ({ classData }) => {
                         onClick={(e) => {
                             e.stopPropagation();
                             setMode("update");
-                            setStudentData(prop.row.original);
+                            setAbsent(prop.row.original);
                             setIsOpen(true);
                         }}
                     >
@@ -124,7 +150,7 @@ const StudentPage = ({ classData }) => {
                         onClick={(e) => {
                             e.stopPropagation();
                             setMode("delete");
-                            setStudentData(prop.row.original);
+                            setAbsent(prop.row.original);
                             setIsOpen(true);
                         }}
                     >
@@ -136,27 +162,35 @@ const StudentPage = ({ classData }) => {
         }),
     ], []);
 
-    const { title, description } = getModalContent(mode, MODAL.student);
-
     return (
-        <div className="mt-12">
-            <TableHeader
-                title={TABLE_HEADER.students.title}
-                additionalTitle={`on ${classData?.name}`}
-                description={TABLE_HEADER.students.description}
-                buttonText={TABLE_HEADER.students.buttonText}
-                action={() => {
-                    setMode("create");
-                    setStudentData(null);
-                    setIsOpen(true);
-                }}
-            />
+        <>
+            <div className="mt-8">
+                <div className="flex justify-between items-center">
+                    <div className="flex justify-start items-center gap-8">
+                        <h1 className="font-semibold text-4xl text-slate-900">{TABLE_HEADER.absents.title}</h1>
+                    </div>
+                    <Button
+                        variant="primary"
+                        onClick={() => {
+                            setMode("create");
+                            setIsOpen(true);
+                        }}
+                    >
+                        <PlusIcon className="size-6 fill-white" />
+                        <span>{TABLE_HEADER.absents.buttonText}</span>
+                    </Button>
+                </div>
+                <p className="text-slate-400 my-4 max-w-lg">
+                    {TABLE_HEADER.absents.description}
+                </p>
+            </div>
             <Table
                 columnsDef={columns}
-                data={studentsData}
+                data={absents}
                 pageIndex={pageIndex}
                 pageSize={pageSize}
                 hasMoreData={hasMoreData}
+                enablePagination={false}
                 setPageIndex={(value) => setPageIndex(value)}
                 setPageSize={(value) => setPageSize(value)}
             />
@@ -167,64 +201,68 @@ const StudentPage = ({ classData }) => {
                 onClose={() => setIsOpen(false)}
             >
                 {mode === "create" && (
-                    <CreateStudentForm
-                        currentClass={classData}
+                    <CreateAbsentForm
+                        journal={journal}
                         afterSubmit={() => {
                             setIsOpen(false);
-                            getStudents(pageSize, offset);
+                            getAbsents();
+                            setAbsent(null);
                         }}
                         onCancel={() => {
                             setIsOpen(false);
-                            setStudentData(null);
+                            setAbsent(null);
                         }}
                     />
                 )}
                 {mode === "update" && (
-                    <UpdateStudentForm
-                        student={studentData}
-                        currentClass={classData}
+                    <UpdateAbsentForm
+                        journal={journal}
+                        absent={absent}
                         afterSubmit={() => {
                             setIsOpen(false);
-                            getStudents(pageSize, offset);
+                            setAbsent(null);
+                            getAbsents();
                         }}
                         onCancel={() => {
                             setIsOpen(false);
-                            setStudentData(null);
+                            setAbsent(null);
                         }}
                     />
                 )}
                 {mode === "delete" && (
-                    <DeleteStudentForm
-                        student={studentData}
+                    <DeleteAbsentForm
+                        absent={absent}
                         afterSubmit={() => {
                             setIsOpen(false);
-                            getStudents(pageSize, offset);
+                            getAbsents();
+                            setAbsent(null);
                         }}
                         onCancel={() => {
                             setIsOpen(false);
-                            setStudentData(null);
+                            setAbsent(null);
                         }}
                     />
                 )}
                 {mode === "detail" && (
-                    <DetailStudentForm
-                        student={studentData}
-                        currentClass={classData}
+                    <DetailAbsentForm
+                        absent={absent}
                         afterSubmit={() => {
                             setIsOpen(false);
-                            setStudentData(null);
+                            setAbsent(null);
                         }}
                     />
                 )}
             </Modal>
-        </div>
+        </>
     )
 };
 
-StudentPage.propTypes = {
-    classData: PropTypes.object,
-}
+StudentAbsentPage.propTypes = {
+    subject: PropTypes.object,
+    journal: PropTypes.object,
+};
 
 const columnHelper = createColumnHelper();
 
-export default StudentPage;
+export default StudentAbsentPage;
+
