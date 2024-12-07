@@ -21,7 +21,7 @@ const ClassPage = () => {
     const [classesData, setClassesData] = useState([]);
     const [classData, setClassData] = useState(null);
     const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(8);
+    const [pageSize] = useState(8);
     const [hasMoreData, setHasMoreData] = useState(true);
     const authHeader = useAuthHeader();
     const offset = pageIndex * pageSize;

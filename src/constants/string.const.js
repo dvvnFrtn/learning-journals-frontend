@@ -12,6 +12,24 @@ export const MESSAGES = {
         deleteError: "Gagal menghapus data class",
         deleteSuccess: "Class berhasil dihapus",
     },
+    approvals: {
+        fetchError: "Gagal mengambil data approval",
+        addError: "Gagal menambahkan data approval",
+        addSuccess: "Approval berhasil ditambahkan",
+        updateError: "Gagal memperbarui data approval",
+        updateSuccess: "Approval berhasil diperbarui",
+        deleteError: "Gagal menghapus data approval",
+        deleteSuccess: "Approval berhasil dihapus",
+    },
+    learningJournals: {
+        fetchError: "Gagal mengambil data journal",
+        addError: "Gagal menambahkan data journal",
+        addSuccess: "Journal berhasil ditambahkan",
+        updateError: "Gagal memperbarui data journal",
+        updateSuccess: "Journal berhasil diperbarui",
+        deleteError: "Gagal menghapus data journal",
+        deleteSuccess: "Journal berhasil dihapus",
+    },
     subjects: {
         fetchError: "Gagal mengambil data subject",
         addError: "Gagal menambahkan data subject",
@@ -25,10 +43,19 @@ export const MESSAGES = {
         fetchError: "Gagal mengambil data students",
         addError: "Gagal menambahkan data students",
         addSuccess: "Student berhasil ditambahkan",
-        updateError: "Gagal memperbarui data subject",
+        updateError: "Gagal memperbarui data students",
         updateSuccess: "Student berhasil diperbarui",
         deleteError: "Gagal menghapus data students",
         deleteSuccess: "Student berhasil dihapus",
+    },
+    studentAbsents: {
+        fetchError: "Gagal mengambil data students-absent",
+        addError: "Gagal menambahkan data students-absent",
+        addSuccess: "Student-absent berhasil ditambahkan",
+        updateError: "Gagal memperbarui data students-absent",
+        updateSuccess: "Student-absent berhasil diperbarui",
+        deleteError: "Gagal menghapus data students-absent",
+        deleteSuccess: "Student-absent berhasil dihapus",
     },
     users: {
         fetchError: "Gagal mengambil data users",
@@ -62,6 +89,20 @@ export const PLACEHOLDERS = {
         name: "e.g John Doe",
         gender: "Select gender",
         selectClass: "Select class",
+    },
+    approvalForm: {
+        status: "Select status",
+        description: "Descripiton approval here...",
+    },
+    journalForm: {
+        learningMaterial: "Type learning material here..",
+        learningActivity: "Type learning activity here..",
+        description: "Type description here..",
+        date: "Select date"
+    },
+    absentForm: {
+        description: "Type description here..",
+        selectStudent: "Select student"
     }
 };
 
@@ -137,7 +178,61 @@ export const MODAL = {
             title: "Detail Student",
             description: "Here is the comprehensive information about the selected student. Review the details carefully."
         }
-    }
+    },
+    approval: {
+        create: {
+            title: "Create Approval",
+            description: "Fill in the details below to add a new approval. Make sure all the information is accurate before submission."
+        },
+        update: {
+            title: "Update Approval",
+            description: "Edit the approval details as needed. Ensure the updated information is accurate before saving."
+        },
+        delete: {
+            title: "Delete Approval",
+            description: "You are about to delete this approval. This action cannot be undone. Are you sure you want to proceed?"
+        },
+        detail: {
+            title: "Detail Approval",
+            description: "Here is the comprehensive information about the selected approval. Review the details carefully."
+        }
+    },
+    journal: {
+        create: {
+            title: "Create Journal",
+            description: "Fill in the details below to add a new journal. Make sure all the information is accurate before submission."
+        },
+        update: {
+            title: "Update Journal",
+            description: "Edit the journal details as needed. Ensure the updated information is accurate before saving."
+        },
+        delete: {
+            title: "Delete Journal",
+            description: "You are about to delete this journal. This action cannot be undone. Are you sure you want to proceed?"
+        },
+        detail: {
+            title: "Detail Journal",
+            description: "Here is the comprehensive information about the selected journal. Review the details carefully."
+        }
+    },
+    absent: {
+        create: {
+            title: "Create Student Absent",
+            description: "Fill in the details below to add a new student absent. Make sure all the information is accurate before submission."
+        },
+        update: {
+            title: "Update Student Absent",
+            description: "Edit the student absent details as needed. Ensure the updated information is accurate before saving."
+        },
+        delete: {
+            title: "Delete Student Absent",
+            description: "You are about to delete this student absent. This action cannot be undone. Are you sure you want to proceed?"
+        },
+        detail: {
+            title: "Detail Student Absent",
+            description: "Here is the comprehensive information about the selected student absent. Review the details carefully."
+        }
+    },
 };
 
 export const TABLE_HEADER = {
@@ -160,5 +255,15 @@ export const TABLE_HEADER = {
         title: "Students",
         description: "This is a list of students available in the system. You can add, edit, or delete students as required.",
         buttonText: "Add Student",
+    },
+    journals: {
+        title: "Learning Journals",
+        description: "This is a list of journals available in the system. You can add, edit, or delete journals as required.",
+        buttonText: "Add Journal",
+    },
+    absents: {
+        title: "Students Absent",
+        description: "This is a list of students absent available in the system. You can add, edit, or delete students absent as required.",
+        buttonText: "Add Student Absent",
     }
 }

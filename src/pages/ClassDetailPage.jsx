@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { MESSAGES } from "../constants/string.const";
 import { toast } from "react-toastify";
-import DashboardLayout from "../layouts/DashboardLayout";
-import Tabs from "../components/Tab";
 import { getToken } from "../utils/common";
+import axiosInstance from "../utils/axiosInstance";
+import { MESSAGES } from "../constants/string.const";
 import SubjectPage from "./SubjectPage";
 import StudentPage from "./StudentPage";
+import DashboardLayout from "../layouts/DashboardLayout";
+import Tabs from "../components/Tab";
 
 const ClassDetailPage = () => {
     const { id } = useParams();

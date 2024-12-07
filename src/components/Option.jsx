@@ -1,9 +1,9 @@
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
+import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import clsx from "clsx";
 import PropTypes, { object } from "prop-types";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
-const Option = ({ placeholder, value, onChange, options, name, ...props }) => {
+const Option = ({ label, placeholder, value, onChange, options, name, ...props }) => {
     return (
         <Listbox
             as={"div"}
@@ -11,6 +11,13 @@ const Option = ({ placeholder, value, onChange, options, name, ...props }) => {
             onChange={onChange}
             {...props}
         >
+            {label && (
+                <Label
+                    className="text-sm font-semibold text-slate-900"
+                >
+                    {label}
+                </Label>
+            )}
             <ListboxButton
                 className="data-[invalid]:border-red-400 focus:outline-none data-[invalid]:data-[focus]:outline-none flex justify-between items-center w-full mt-3 py-1.5 px-3 border rounded-lg text-left text-slate-900 border-slate-300 bg-white data-[disabled]:bg-slate-100 data-[disabled]:text-slate-500"
             >
@@ -53,6 +60,7 @@ Option.propTypes = {
     onChange: PropTypes.func,
     value: PropTypes.any,
     placeholder: PropTypes.string,
+    label: PropTypes.string
 }
 
 export default Option;
