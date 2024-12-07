@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import ExamplePage from "./pages/ExamplePage";
 import UserPage from "./pages/UserPage";
 import ClassPage from "./pages/ClassPage";
 import ApprovalPage from "./pages/ApprovalPage";
@@ -24,11 +23,6 @@ const App = () => {
                 <Route path="/" element={
                     <ProtectedRoute allowedRoles={["admin", "user"]}>
                         <HomePage />
-                    </ProtectedRoute>
-                } />
-                <Route path="/examples" element={
-                    <ProtectedRoute allowedRoles={["admin", "user"]}>
-                        <ExamplePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/users" element={
