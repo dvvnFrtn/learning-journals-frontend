@@ -14,6 +14,7 @@ import JournalMainPage from "./pages/journals/JournalMainPage";
 import JournalDetailPage from "./pages/journals/JournalDetailPage";
 import ApprovalDetailPage from "./pages/ApprovalDetailPage";
 import HomePage from "./HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const App = () => {
     return (
@@ -75,6 +76,7 @@ const App = () => {
                         <JournalDetailPage />
                     </ProtectedRoute>
                 } />
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <ToastContainer
                 position="top-center"
